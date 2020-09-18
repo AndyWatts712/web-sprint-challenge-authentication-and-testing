@@ -4,9 +4,9 @@ const server = require("./server.js")
 const db = require("../database/dbConfig.js")
 
 describe('POST /auth', () => {
-    // beforeEach(async () => {
-    //     await db("users").truncate();
-    // });
+    beforeEach(async () => {
+        await db("users").truncate();
+    });
     it("/register should return 400 when passed bad data", () => {
             return supertest(server)
                 .post("/api/auth/register")
@@ -48,7 +48,7 @@ describe('POST /auth', () => {
 describe('GET /jokes', () => {
     it("should return 401 if not logged in", async () => {
         const res = await supertest(server).get("/api/jokes")
-            expect(res.body).toBe({message: "No token!"})
+            expect(res.body).toEqual({message: "No token!"})
     })
 
     it("should return jokes if logged in", async () => {
