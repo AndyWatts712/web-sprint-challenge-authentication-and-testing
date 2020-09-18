@@ -3,8 +3,10 @@ const supertest = require("supertest")
 const server = require("./server.js")
 const db = require("../database/dbConfig.js")
 
+let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJhZG1vc29sIiwic3ViamVjdCI6MSwiaWF0IjoxNjAwNDU0Mjg2LCJleHAiOjE2MDA0ODMwODZ9.LEog2hicRCTzk23Ry3wGXNE4JkB4Xn1HIu_8xHFnJsM"
+
 describe('POST /auth', () => {
-    beforeEach(async () => {
+    beforeAll(async () => {
         await db("users").truncate();
     });
     it("/register should return 400 when passed bad data", () => {
@@ -52,7 +54,8 @@ describe('GET /jokes', () => {
     })
 
     it("should return jokes if logged in", async () => {
-        const res = await supertest(server).get("/api/jokes")
-            expect(res.body.joke).toBe(true)
+        const res = await supertest(server).get("/api/jokes").set('authorization', `${token}`)
+        console.log(res.body)
+            expect(res.body).toHaveLength(20)
     })
 })
